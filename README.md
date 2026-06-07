@@ -9,7 +9,7 @@ A web-based calibration management system built with PHP and MySQL.
 
 ## Tech Stack
 - PHP
-- MySQL (via XAMPP)
+- SQLite (via XAMPP)
 - HTML/CSS/JavaScript
 
 ## How to Run
