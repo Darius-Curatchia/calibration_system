@@ -1,0 +1,564 @@
+/* =============================================
+   HEADER — Calibration Management System
+   Refined industrial precision.
+   No animations — performance-first.
+   ============================================= */
+
+:root {
+    --header-height: 62px;
+    --header-bg:     #ffffff;
+    --header-border: #dde4ec;
+    --header-accent: #1a90d9;
+    --header-deep:   #05304f;
+}
+
+/* ── Base ───────────────────────────────────────────── */
+.header {
+    position: fixed;
+    top: 0;
+    left: var(--sidebar-width, 260px);
+    right: 0;
+    height: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    box-sizing: border-box;
+    z-index: 100;
+    transition: left 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+
+    background: var(--header-bg);
+    border-bottom: 1.5px solid var(--header-border);
+    /* Subtle depth shadow — no blur, no glow */
+    box-shadow: 0 2px 12px rgba(5, 48, 79, 0.07);
+
+    overflow: visible;
+}
+
+body[data-sidebar="collapsed"] .header {
+    left: var(--sidebar-collapsed-width, 68px);
+}
+
+/* ── Top accent line — full-width rule at very top ───── */
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2.5px;
+    background: linear-gradient(to right, var(--header-deep) 0%, var(--header-accent) 40%, rgba(26,144,217,0.15) 100%);
+    z-index: 1;
+}
+
+/* ── Left side ───────────────────────────────────────── */
+.header-left {
+    display: flex;
+    align-items: center;
+    padding-left: 24px;
+    gap: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+.header-logo {
+    height: 26px;
+    object-fit: contain;
+    object-position: left center;
+    display: block;
+    flex-shrink: 0;
+    /* Slight desaturation so logo doesn't overpower */
+    filter: saturate(0.9);
+}
+
+.header-vline {
+    width: 1px;
+    height: 28px;
+    background: var(--header-border);
+    flex-shrink: 0;
+    margin: 0 20px;
+}
+
+.header-identity {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    justify-content: center;
+}
+
+.header-sys-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--header-deep);
+    letter-spacing: 0.9px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1;
+}
+
+.header-clock-wrap {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+/* Status dot — static (no pulse animation, performance-safe) */
+.header-clock-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--header-accent);
+    flex-shrink: 0;
+    /* Simple breathe — CSS only, cheap, single keyframe */
+    animation: hdDot 3s ease-in-out infinite;
+}
+
+@keyframes hdDot {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.35; }
+}
+
+.header-clock {
+    font-size: 10.5px;
+    font-weight: 500;
+    color: #64788a;
+    font-family: 'DM Mono', 'Courier New', monospace;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    line-height: 1;
+    /* Tabular nums so the clock doesn't jitter */
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Right side ──────────────────────────────────────── */
+.header-right {
+    display: flex;
+    align-items: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+
+/* ── Session status tag (role pill in header) ────────── */
+.header-role-tag {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    border-left: 1px solid var(--header-border);
+    gap: 7px;
+}
+
+.header-role-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.header-role-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* Role colours */
+.header-role-tag[data-role="super_admin"] .header-role-dot   { background: #7c3aed; }
+.header-role-tag[data-role="super_admin"] .header-role-label { color: #7c3aed; }
+.header-role-tag[data-role="admin"]       .header-role-dot   { background: #059669; }
+.header-role-tag[data-role="admin"]       .header-role-label { color: #059669; }
+.header-role-tag[data-role="user"]        .header-role-dot   { background: #d97706; }
+.header-role-tag[data-role="user"]        .header-role-label { color: #d97706; }
+.header-role-tag[data-role="guest"]       .header-role-dot   { background: #94a3b8; }
+.header-role-tag[data-role="guest"]       .header-role-label { color: #94a3b8; }
+
+/* ── User trigger button ─────────────────────────────── */
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 0 18px 0 16px;
+    cursor: pointer;
+    user-select: none;
+    border-left: 1px solid var(--header-border);
+    transition: background 0.14s ease;
+    position: relative;
+    outline: none;
+}
+
+.header-user:hover {
+    background: #f5f8fb;
+}
+
+.header-user:focus-visible {
+    outline: 2px solid var(--header-accent);
+    outline-offset: -3px;
+}
+
+/* ── Avatar ──────────────────────────────────────────── */
+.header-user-avatar {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--header-deep);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'DM Sans', sans-serif;
+    /* Crisp border instead of gradient outline */
+    border: 1.5px solid rgba(26, 144, 217, 0.35);
+    overflow: hidden;
+    transition: border-color 0.14s ease;
+}
+
+.header-user:hover .header-user-avatar {
+    border-color: var(--header-accent);
+}
+
+.header-user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+}
+
+/* Online indicator */
+.header-avatar-ring {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #22c55e;
+    border: 2px solid #fff;
+    z-index: 1;
+}
+
+/* ── User meta text ──────────────────────────────────── */
+.header-user-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    line-height: 1;
+    min-width: 0;
+}
+
+.header-user-label {
+    font-size: 9.5px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+}
+
+.header-user-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--header-deep);
+    white-space: nowrap;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.05px;
+}
+
+/* Chevron */
+.header-chevron {
+    width: 13px;
+    height: 13px;
+    color: #94a3b8;
+    flex-shrink: 0;
+    transition: transform 0.18s ease, color 0.14s ease;
+}
+
+.header-user:hover .header-chevron {
+    color: var(--header-deep);
+}
+
+.header-user[aria-expanded="true"] .header-chevron {
+    transform: rotate(180deg);
+    color: var(--header-accent);
+}
+
+/* ── Dropdown ─────────────────────────────────────────── */
+.header-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(var(--header-height) + 8px);
+    right: 12px;
+    width: 252px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    /* Crisper shadow — no blur on the header itself */
+    box-shadow:
+        0 4px 6px rgba(5, 48, 79, 0.06),
+        0 10px 30px rgba(5, 48, 79, 0.12);
+    z-index: 300;
+    overflow: hidden;
+}
+
+.header-dropdown.open {
+    display: block;
+}
+
+/* ── Profile summary ─────────────────────────────────── */
+.hd-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    /* Subtle engineered pattern: fine grid */
+    background:
+        linear-gradient(rgba(5,48,79,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(5,48,79,0.025) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-color: #f8fafc;
+    border-bottom: 1px solid #eef1f5;
+}
+
+.hd-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+    background: var(--header-deep);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 1.5px solid rgba(26, 144, 217, 0.3);
+    font-family: 'DM Sans', sans-serif;
+}
+
+.hd-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 9px;
+    display: block;
+}
+
+.hd-profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.hd-name {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--header-deep);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.25;
+}
+
+.hd-username {
+    font-size: 11px;
+    color: #64788a;
+    font-family: 'DM Mono', 'Courier New', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hd-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    width: fit-content;
+    /* Square pill feels more "enterprise" than rounded */
+}
+
+/* Badge before — coloured square dot */
+.hd-role-badge::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.hd-role-badge.super_admin { background: rgba(124,58,237,0.08);  color: #7c3aed; border: 1px solid rgba(124,58,237,0.18); }
+.hd-role-badge.super_admin::before { background: #7c3aed; }
+.hd-role-badge.admin        { background: rgba(5,150,105,0.08);   color: #059669; border: 1px solid rgba(5,150,105,0.2); }
+.hd-role-badge.admin::before { background: #059669; }
+.hd-role-badge.user         { background: rgba(217,119,6,0.08);   color: #b45309; border: 1px solid rgba(217,119,6,0.2); }
+.hd-role-badge.user::before  { background: #b45309; }
+.hd-role-badge.guest        { background: rgba(100,120,138,0.08); color: #476579; border: 1px solid rgba(100,120,138,0.18); }
+.hd-role-badge.guest::before { background: #476579; }
+
+/* ── Divider ─────────────────────────────────────────── */
+.hd-divider {
+    height: 1px;
+    background: #eef1f5;
+}
+
+/* ── Menu items ──────────────────────────────────────── */
+.hd-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1c2b3a;
+    text-decoration: none;
+    transition: background 0.12s ease, color 0.12s ease;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    /* Reset button defaults */
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+}
+
+.hd-item:hover {
+    background: #f0f4f8;
+    color: var(--header-deep);
+}
+
+.hd-item:focus-visible {
+    outline: 2px solid var(--header-accent);
+    outline-offset: -2px;
+    background: #f0f4f8;
+}
+
+.hd-item svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    color: #64788a;
+    transition: color 0.12s ease;
+}
+
+.hd-item:hover svg {
+    color: var(--header-deep);
+}
+
+/* Danger item */
+.hd-item-danger {
+    color: #b91c1c;
+}
+
+.hd-item-danger:hover {
+    background: #fff5f5;
+    color: #991b1b;
+}
+
+.hd-item-danger svg {
+    color: #dc2626;
+}
+
+.hd-item-danger:hover svg {
+    color: #991b1b;
+}
+
+/* Keyboard focus trap helper */
+.hd-item:last-child {
+    border-radius: 0 0 11px 11px;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media screen and (max-width: 960px) {
+    .header-sys-title { display: none; }
+    .header-vline     { display: none; }
+}
+
+/* Tablet: collapse adjustments */
+@media screen and (max-width: 768px) {
+    :root { --header-height: 52px; }
+
+    .header {
+        left: var(--sidebar-collapsed-width, 68px);
+    }
+
+    body[data-sidebar="expanded"] .header {
+        left: var(--sidebar-width, 260px);
+    }
+
+    .header-left       { padding-left: 14px; }
+    .header-logo       { height: 22px; }
+    .header-role-tag   { display: none; }
+    .header-user-meta  { display: none; }
+    .header-user       { padding: 0 14px; }
+    .header-chevron    { display: none; }
+
+    .header-dropdown {
+        right: 0;
+        width: 240px;
+    }
+}
+
+/* Phone */
+@media screen and (max-width: 480px) {
+    :root { --header-height: 52px; }
+
+    .header {
+        left: var(--sidebar-collapsed-width, 68px);
+    }
+
+    body[data-sidebar="expanded"] .header {
+        left: var(--sidebar-collapsed-width, 68px);
+    }
+
+    .header-left       { padding-left: 12px; }
+    .header-logo       { height: 20px; }
+    .header-clock-wrap { display: none; }
+    .header-role-tag   { display: none; }
+    .header-user-meta  { display: none; }
+    .header-user       { padding: 0 12px; }
+    .header-chevron    { display: none; }
+
+    .header-dropdown {
+        right: 0;
+        left: 0;
+        width: auto;
+        border-radius: 0 0 12px 12px;
+        top: 52px;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .header,
+    .header-user,
+    .header-chevron,
+    .header-user-avatar,
+    .hd-item { transition: none; }
+    .header-clock-dot { animation: none; }
+}
+
+/* ── Font isolation ── */
+.header,
+.header *,
+.header-dropdown,
+.header-dropdown * {
+    font-family: 'DM Sans', sans-serif;
+}

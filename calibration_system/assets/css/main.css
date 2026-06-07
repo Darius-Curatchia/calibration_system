@@ -1,0 +1,56 @@
+/* =============================================
+   MAIN CONTENT LAYOUT
+   Syncs with sidebar.css variables & transitions
+   ============================================= */
+
+.main-content {
+    margin-left: var(--sidebar-width, 260px);
+    padding: 82px 28px 36px;         /* top = header height (62px) + 20px gap */
+    background-color: #f0f4f8;
+    min-height: 100vh;
+    box-sizing: border-box;
+    transition: margin-left 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Collapsed sidebar — desktop toggle */
+body[data-sidebar="collapsed"] .main-content {
+    margin-left: var(--sidebar-collapsed-width, 68px);
+}
+
+/* ── Tablet (481–768px) ──────────────────────────────
+   Sidebar starts collapsed (68px) but the toggle btn
+   is still visible, so we use the collapsed width.
+   Header shrinks to 52px, so top padding adjusts.     */
+@media screen and (max-width: 768px) {
+    .main-content {
+        margin-left: var(--sidebar-collapsed-width, 68px);
+        padding: 72px 20px 28px;     /* top = 52px header + 20px gap */
+    }
+
+    /* If user expanded the sidebar on tablet, honour it */
+    body[data-sidebar="expanded"] .main-content {
+        margin-left: var(--sidebar-width, 260px);
+    }
+}
+
+/* ── Phone (≤ 480px) ─────────────────────────────────
+   Sidebar is CSS-forced to 68px icon-only rail;
+   no toggle, always use collapsed width.               */
+@media screen and (max-width: 480px) {
+    .main-content {
+        margin-left: var(--sidebar-collapsed-width, 68px);
+        padding: 72px 14px 28px;
+    }
+
+    /* Lock out any expanded state on phone */
+    body[data-sidebar="expanded"] .main-content {
+        margin-left: var(--sidebar-collapsed-width, 68px);
+    }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+    .main-content {
+        transition: none;
+    }
+}
